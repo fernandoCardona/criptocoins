@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import imagen from './cryptomonedas.png';
-
+import Formulario from './components/Formulario';
+//1.1-Creamos nuestro propio hook en la carpeta Hooks Para el formulario
+import useMoneda from './hooks/useMoneda';
+ 
+ 
 const Contenedor = styled.div`
   max-width: 900px;
   margin: 0 auto;
@@ -34,13 +38,25 @@ const Heading = styled.h1`
 `;
 
 function App() {
+  //7.0- Creaamos el State para los calores de cotizaciones
+  const [moneda, guardarMoneda] = useState('');
+  const [criptomoneda, guardarCriptomoneda] = useState('');
+
+//8.0-Creamos el useEffect 
+useEffect(() => {
+  //evitamos la ejecucion la primera vez al cargar
+  if(moneda === '')return;
+  console.log('Cotizando....');
+}, [moneda, criptomoneda]);  
+
   return (
     <Contenedor>
       <div>
         <Imagen src={imagen} alt="Imagen criptomonedas" />
       </div>
-      <div>
-      <Heading>Cotiza CriptoCoins al instante</Heading>
+      <div> 
+        <Heading>Cotiza CriptoCoins al instante</Heading>
+        <Formulario guardarMoneda={guardarMoneda} guardarCriptomoneda={guardarCriptomoneda}/>
       </div>
     </Contenedor>
   );
