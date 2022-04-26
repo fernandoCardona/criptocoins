@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import imagen from './cryptomonedas.png';
 import Formulario from './components/Formulario';
+import Cotizacion from './components/Cotizacion';
+//8.3-Importamos axios en appj.js para la consulta a la API
+import axios from 'axios';
 //1.1-Creamos nuestro propio hook en la carpeta Hooks Para el formulario
 import useMoneda from './hooks/useMoneda';
+import Spinner from './components/Spinner';
  
  
 const Contenedor = styled.div`
@@ -41,13 +45,43 @@ function App() {
   //7.0- Creaamos el State para los calores de cotizaciones
   const [moneda, guardarMoneda] = useState('');
   const [criptomoneda, guardarCriptomoneda] = useState('');
+  //8.6-Creamos un state con el resultado dinamico de la consulta de la cotizacion 
+  const [resultado, guardarResultado] = useState({});
+  //8.7-Creamos un state con el error dinamico de la consulta de la cotizacion
+  const [error, guardarError] = useState(false);
+  //8.8-Creamos un state con el cargando dinamico de la consulta de la cotizacion
+  const [cargando, guardarCargando] = useState(false);
+
 
 //8.0-Creamos el useEffect 
 useEffect(() => {
   //evitamos la ejecucion la primera vez al cargar
-  if(moneda === '')return;
-  console.log('Cotizando....');
+
+    //8.4-consultamos la API para obtener la cotizacion 
+  const cotizarCriptomoneda = async () => {
+    if(moneda === '')return;
+
+    const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
+    const resultado = await axios.get(url);
+    // mostrar el spinner
+    guardarCargando(true);
+
+    // ocultar el spinner y mostrar el resultado
+    setTimeout(() => {
+
+      // cambiar el estado de cargando
+      guardarCargando(false);
+
+      // guardar cotizacion
+      guardarResultado(resultado.data.DISPLAY[criptomoneda][moneda] );
+    }, 3000);
+
+  }
+  cotizarCriptomoneda();
 }, [moneda, criptomoneda]);  
+
+  // Mostrar spinner o resultado
+  const componente = (cargando) ? <Spinner /> :  <Cotizacion  resultado={resultado} />
 
   return (
     <Contenedor>
@@ -57,6 +91,7 @@ useEffect(() => {
       <div> 
         <Heading>Cotiza CriptoCoins al instante</Heading>
         <Formulario guardarMoneda={guardarMoneda} guardarCriptomoneda={guardarCriptomoneda}/>
+         {componente}
       </div>
     </Contenedor>
   );

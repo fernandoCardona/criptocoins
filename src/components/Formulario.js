@@ -1,34 +1,33 @@
 //5.0-importamos useEffect para hacer la llamada a la API cuando el documento este listo
-import React, { useState ,useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+
+import Error from './Error';
 import useMoneda from '../hooks/useMoneda';
 import useCriptomoneda from '../hooks/useCriptomoneda';
-import Error from './Error';
 //8.0.1-importamos axios parala consulta a la API
 import axios from 'axios';
 
 const Boton = styled.input`
-    width: 100%;
     margin-top: 20px;
     font-weight: bold;
+    font-size: 20px;
     padding: 10px;
-    background-color: #66A2FE;
+    background-color: #66a2fe;
     border: none;
+    width: 100%;
     border-radius: 10px;
     color: #FFF;
-    font-size: 20px;
-    margin-bottom: 10px;
     transition: background-color .3s ease;
-
     &:hover {
         background-color: #326AC0;
-        cursor: pointer;
+        cursor:pointer;
     }
 `;
 
-const Formulario = ({guardarMoneda, guardarCriptomoneda}) => {
+const Formulario = ({guardarMoneda,  guardarCriptomoneda }) => {
     //5.0-useState para el state para el listado de criptomonedas 
-    const[listacripto, guardarCriptomonedas] = useState([]);
+    const [ listacripto, guardarCriptomonedas ] = useState([]);
     //5.0.1-validacion state para el listado de criptomonedas
     const[error, guardarError] = useState(false);
 
@@ -43,29 +42,19 @@ const Formulario = ({guardarMoneda, guardarCriptomoneda}) => {
         {codigo: 'GBP', nombre: 'Libra Esterlina'},
         
     ]
-    const [moneda, SelectMonedas ] = useMoneda('Elija la moneda', '', MONEDAS);
+    const [ moneda, SelectMonedas ] = useMoneda('Elige tu Moneda', '', MONEDAS);
    
     //4.1-Utilizamos el hook useCriptomoneda en el componente formulario importando los valores y las funciones
-     const [criptomoneda, SelectCripto] = useCriptomoneda('Elije tu CriptoMoneda', '', listacripto);
+    const [criptomoneda, SelectCripto] = useCriptomoneda('Elige tu Criptomoneda', '', listacripto);
     //5.2-Ejecutamos la llamada a la API con useEffectacion
     useEffect(() => {
         const consultarAPI = async () => {
             //5.2-Aqui llamamos a la API
-            const url = `https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD`;
+            const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD';
             //5.3-Realizamos la peticion a la API
             const resultado = await axios.get(url);
             guardarCriptomonedas(resultado.data.Data);
-            //5.4-Transformamos la respuesta en JSON
-            //const res = await resultado.json();
-            //5.5-Extraemos el valor de la moneda y la criptomoneda
-            //5.6-Convertimos el resultado en un string para que sea legible
-            //5.7-Lo convertimos a float para que sea legible
-            //5.8-Lo pasamos a una constante para que no cambie
-            //5.9-Extraemos el valor de la criptomoneda
-            //5.10-Extraemos el valor de la moneda
-            //const resultadoFinal = res.DISPLAY[criptomoneda][moneda];
-            //5.11-Mostramos el resultado en la consola
-            //console.log(resultadoFinal);
+             
         }
         consultarAPI();
     }, [criptomoneda, moneda]);
@@ -81,7 +70,6 @@ const Formulario = ({guardarMoneda, guardarCriptomoneda}) => {
         }
         //6.2-Si ambos campos tienen un valor limpiamos el error
         guardarError(false);
-        
         guardarMoneda(moneda);
         guardarCriptomoneda(criptomoneda);
     }
@@ -90,6 +78,7 @@ const Formulario = ({guardarMoneda, guardarCriptomoneda}) => {
         <form onSubmit={cotizarMoneda}>
             {error ? <Error mensaje="Todos los campos son obligatorios"/> : null}
             <SelectMonedas />
+
             <SelectCripto />
 
             <Boton
@@ -101,4 +90,4 @@ const Formulario = ({guardarMoneda, guardarCriptomoneda}) => {
 }
  
 export default Formulario;
-//const [moneda, guardarMoneda] = useState();
+ 

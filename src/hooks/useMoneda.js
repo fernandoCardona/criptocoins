@@ -36,10 +36,13 @@ const useMoneda = (label, stateInicial, opciones) => {
                 
                 {
                     //3.1-Hacemos un map de opciones para capturar los datos de la seleccion en componente Formulario
+                }
+                {
                     opciones.map(opcion => (
                     <option key={opcion.codigo} value={opcion.codigo}>{opcion.nombre}</option>
                     ))
                 }
+                
             </Select> 
         </Fragment>
     );

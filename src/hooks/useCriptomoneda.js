@@ -28,19 +28,23 @@ const useCriptomoneda = (label, stateInicial, opciones) => { //console.log( opci
     //2.2-stateInicial es igual al string vacio que le pasamos a useMoneda en el formulario 
     //2.3-opciones es igual al valor MONEDAS que le pasamos a useMoneda en el formulario opciones = MONDEAS
     const SelectCripto = () =>(
-         
-        <Fragment> 
+          
+                <Fragment>
             <Label>{label}</Label>
-            <Select onChange={e=>actualizarState(e.target.value)} value={state}>
-                 <option value="">-- Seleccione --</option>
-                
+            <Select
+                onChange={ e => actualizarState(e.target.value)}
+                value={state}
+            >
+            {
+            //3.1-Hacemos un map de opciones para capturar los datos de la seleccion en   componente Formulario
+            }
+                <option value="">- Seleccione -</option>
                 {
-                    //3.1-Hacemos un map de opciones para capturar los datos de la seleccion en   componente Formulario
                     opciones.map(opcion => (
                     <option key={opcion.CoinInfo.Id} value={opcion.CoinInfo.Name}>{opcion.CoinInfo.FullName}</option>
                     ))
                 }
-            </Select> 
+            </Select>
         </Fragment>
     );
 
